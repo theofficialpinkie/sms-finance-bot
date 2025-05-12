@@ -1,19 +1,21 @@
-const { getYesterdayDate } = require('./utils');
-const { getYesterdaySpend } = require('./plaid');
-require('dotenv').config(); // Loads .env file
-const { getBalances } = require('./plaid'); // Imports your balance function
+require('dotenv').config(); // Load .env early
 
-//(async () => {
- // try {
- //   const balances = await getBalances();
- //   console.log('💰 Balances:', balances);
- // } catch (err) {
- //   console.error('❌ Error fetching balances:', err.message);
- //   console.log('📅 Yesterday was:', getYesterdayDate());
- // }
-// })();
+const { getBalances, getYesterdaySpend } = require('./plaid');
+const { formatBalances, formatSpend } = require('./utils');
 
 (async () => {
-    const spend = await getYesterdaySpend();
-    console.log('🧾 Yesterday’s Transactions:\n', spend);
-  })();
+  try {
+    const balances = await getBalances();
+    const transactions = await getYesterdaySpend();
+
+    const message =
+      `[Finance Update]\n` +
+      formatBalances(balances) +
+      `\n\n` +
+      formatSpend(transactions);
+
+    console.log(message);
+  } catch (err) {
+    console.error('❌ Error generating report:', err.message);
+  }
+})();
