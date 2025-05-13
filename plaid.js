@@ -63,6 +63,43 @@ async function getBalances() {
   }
 }
 
-module.exports = { getYesterdaySpend, getBalances };
+async function getMonthlySpend () {
+
+try {
+const now = new Date();
+const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+const start_date = firstOfMonth.toISOString().split('T')[0];
+const end_date = now.toISOString().split('T')[0];
+
+   const response = await client.transactionsGet({
+  access_token: process.env.PLAID_ACCESS_TOKEN,
+  start_date,
+  end_date,
+  options: { count: 100, offset: 0 }, // increased count to 100
+});
+
+const transactions = response.data.transactions;
+
+const total = transactions.reduce((sum, txn) => sum + txn.amount, 0).toFixed(2);
+
+return {
+  total,
+  transactions,
+};
+
+} catch (err) {
+console.error('❌ Error fetching monthly spend:', err.message);
+return {
+total: '0.00',
+transactions: [],
+};
+
+}
+
+}
+
+
+module.exports = { getYesterdaySpend, getBalances, getMonthlySpend, };
+
 
 
