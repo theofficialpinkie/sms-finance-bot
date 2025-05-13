@@ -67,6 +67,7 @@ async function getMonthlySpend () {
 
 try {
 const now = new Date();
+// This function returns the first day of the month
 const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 const start_date = firstOfMonth.toISOString().split('T')[0];
 const end_date = now.toISOString().split('T')[0];

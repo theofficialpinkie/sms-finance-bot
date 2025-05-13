@@ -10,7 +10,7 @@ const { formatBalances, formatSpend } = require('./utils');
     const { total: monthlyTotal } = await getMonthlySpend();
 
     const message =
-      `[Finance Update]\n` +
+      `[ Daily Finance Update]\n` +
       formatBalances(balances) +
       `\n\n` +
       formatSpend(yesterdayTransactions) +
